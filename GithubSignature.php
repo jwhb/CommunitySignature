@@ -11,15 +11,28 @@ class GithubSignature {
 		$this->img_gen = new ImgGenerator ();
 	}
 	
+	private function getGravatarUri($gravatar_id, $gravatar_size){
+		$url = str_replace(
+			array('{id}', '{size}'), 
+			array($gravatar_id, $gravatar_size),
+			Config::getImageConfig()['gravatar_url']
+		);
+		return($url);
+	}
+	
 	public function showSignature($username) {
 		try {
 			$client = new Github\Client(new Github\HttpClient\CachedHttpClient(array(
 				'cache_dir' => '/tmp/github-api-cache' 
 			)));
 			
-			$repositories = $client->api('user')->show($username);
+			$user = $client->api('user')->show($username);
 			
-			$this->img_gen->generateByText(print_r($repositories, true));
+			$info = array(
+				'gravatar_url' => $this->getGravatarUri($user['gravatar_id'],
+					Config::getImageConfig()['gravatar_size'])
+			);
+			$this->img_gen->generateSignature($info);
 		}catch(Exception $e){
 			$this->img_gen->generateByText($e->getMessage());
 		}

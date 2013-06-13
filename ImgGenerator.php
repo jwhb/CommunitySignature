@@ -27,7 +27,18 @@ class ImgGenerator {
 		$this->showImage($image);
 	}
 	
-	public function showImage($image){
+	public function generateSignature($info){
+		$ffile = $this->config['fontfile'];
+		$fsize = $this->config['fontsize'];
+		$avatar = imagecreatefromjpeg($info['gravatar_url']);
+		
+		$black = imagecolorallocate($avatar, 0, 0, 0);
+		imagettftext($avatar, $fsize, 0, 0, 190, $black, $ffile, 'HALLO');
+		
+		$this->showImage($avatar);
+	}
+	
+	private function showImage($image){
 		header('Content-type: image/png');
 		imagepng($image);
 		imagedestroy($image);
