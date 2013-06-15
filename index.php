@@ -2,6 +2,8 @@
 
 require_once('githubsignature.php');
 
-$github = new GithubSignature();
-$github->showSignature('JWhy');
+$tokens = explode('/', $_SERVER["REQUEST_URI"]);
+$username = $tokens[sizeof($tokens)-1] or $username = 'JWhy';
 
+$github = new GithubSignature();
+$github->showSignature($username);
