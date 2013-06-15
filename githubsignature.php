@@ -29,7 +29,6 @@ class GithubSignature {
 			$user = $client->api('user')->show($username);
 			$gravatar_url = $this->getGravatarUri($user['gravatar_id'],
 				Config::getImageConfig()['gravatar_size']);
-			
 			$this->img_gen->generateSignature(array(
 				'gravatar_url' => $gravatar_url,
 				'username' => $user['name'],
@@ -47,7 +46,14 @@ class GithubSignature {
 			));
 		}catch(Exception $e){
 			if(isset($_GET['raw'])) print($e . "<br><br>\n\n");
-			$this->img_gen->generateByText($e->getMessage());
+			
+			$msg = 'An error occured.';
+			if($e->getMessage() == 'Not Found'){
+				$msg = "The username '$username' could not be found";
+			}else{
+				$msg = $e->getMessage();
+			}
+			$this->img_gen->generateByText($msg);
 		}
 	}
 	
