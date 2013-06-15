@@ -14,12 +14,10 @@ class Config{
 		return(array(
 			
 			/* Gravatar settings */
-			//'gravatar_url' => 'http://www.gravatar.com/avatar/{id}?s={size}',
-			'gravatar_url' => 'http://localhost/assets/jwhy.jpg',
-			'gravatar_size' => 100,
+			'gravatar_url' => 'http://www.gravatar.com/avatar/{id}?s={size}',
+			'gravatar_size' => 80,
 				
 			/* Signature font settings */
-			'fontsize' => 10,
 			'fontfile' => './opensans.ttf',
 				
 			/* Image dimensions */
@@ -29,6 +27,20 @@ class Config{
 			/* Colors */
 			'col' => array(
 				'background' => $white
+			),
+				
+			/* Elements */
+			'elements' => array(
+				'username' => array(
+					'fontsize' => 18,
+					'offsetX' => 3,
+					'offsetY' => 5,
+				),
+				'repos' => array(
+					'fontsize' => 10,
+					'offsetX' => 3,
+					'offsetY' => 8,
+				)
 			),
 		));
 	}
