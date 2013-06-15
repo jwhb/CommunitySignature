@@ -28,13 +28,14 @@ class ImgGenerator {
 	}
 	
 	public function generateSignature($info){
-		$ffile = $this->config['fontfile'];
-		$fsize = $this->config['fontsize'];
+		$cfg = $this->config;
+		$ffile = $cfg['fontfile'];
+		$gsize = $cfg['gravatar_size'];
+
+		$width = $cfg['img_width'];
+		$heigth = $cfg['img_heigth'];
 		
-		$width = $this->config['img_width'];
-		$heigth = $this->config['img_heigth'];
-		
-		$colors = $this->config['col'];
+		$colors = $cfg['col'];
 		
 		$back_col = $colors['background'];
 		
@@ -55,8 +56,45 @@ class ImgGenerator {
 		//Copy avatar image into destination image
 		imagecopy($im, $avatar, 0, 0, 0, 0, imagesx($avatar), imagesy($avatar));
 		
+		//Add username as header to image
+		$usr = $cfg['elements']['username'];
+		$header_y = $usr['fontsize'] + $usr['offsetY'];
+		imagettftext($im, $usr['fontsize'], 0, $gsize + $usr['offsetX'], $usr['fontsize'] + $usr['offsetY'], $black, $ffile, $info['username']);
+		unset($usr, $avatar);
+
+		//Add repos to image
 		
-		imagettftext($im, $fsize, 0, 10, 10, $black, $ffile, 'HALLO');
+		$repocfg = $cfg['elements']['repos'];
+		$starcfg = $cfg['elements']['stars'];
+		$rfsize = $repocfg['fontsize'];
+		$rowY[0] = $header_y + $rfsize + $repocfg['offsetY'];
+		$max_repo_width = 0;
+		$max_startxt_width = 0;
+		
+		//Add repo names
+		foreach($info['repos'] as $num=>$repo){
+			//Write row positions
+			if($num > 0) $rowY[$num] = $rowY[$num - 1] + $rfsize + $repocfg['offsetY'];
+			$reponame = $info['repos'][$num]['name'];
+			
+			imagettftext($im, $rfsize, 0, $gsize + $repocfg['offsetX'], $rowY[$num], $black, $ffile, $reponame);
+			
+			//Determine max width for table style indention
+			$box = imagettfbbox($rfsize, 0, $ffile, $reponame);
+			if($box[4] > $max_repo_width) $max_repo_width = $box[4];
+		}
+		
+		//Add repo star counts
+		foreach($info['repos'] as $num=>$repo){
+			//Add repo star count
+			$stars = $info['repos'][$num]['stars'];
+			imagettftext($im, $rfsize, 0, $gsize + $max_repo_width + $starcfg['text_offsetX'], $rowY[$num], $black, $ffile, $stars);
+			
+			//Determine max width for table style indention
+			$box = imagettfbbox($rfsize, 0, $ffile, $stars);
+			if($box[4] > $max_startxt_width) $max_startxt_width = $box[4];
+		}
+		unset($repocfg, $rfsize, $rowY);
 		
 		//Pass complete image
 		$this->showImage($im);

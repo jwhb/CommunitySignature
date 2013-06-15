@@ -27,13 +27,26 @@ class GithubSignature {
 			)));
 			
 			$user = $client->api('user')->show($username);
+			$gravatar_url = $this->getGravatarUri($user['gravatar_id'],
+				Config::getImageConfig()['gravatar_size']);
 			
-			$info = array(
-				'gravatar_url' => $this->getGravatarUri($user['gravatar_id'],
-					Config::getImageConfig()['gravatar_size'])
-			);
-			$this->img_gen->generateSignature($info);
+			$this->img_gen->generateSignature(array(
+				'gravatar_url' => $gravatar_url,
+				'username' => $user['name'],
+				'repos' => array(
+					array(
+						'name' => 'CraftButler', 'stars' => 1, 'lang' => 'Java' 
+					),
+					array(
+						'name' => 'ElectEx', 'stars' => 2, 'lang' => 'PHP' 
+					),
+					array(
+						'name' => 'ChattyKitten', 'stars' => 4, 'lang' => 'Java' 
+					),
+				)
+			));
 		}catch(Exception $e){
+			if(isset($_GET['raw'])) print($e . "<br><br>\n\n");
 			$this->img_gen->generateByText($e->getMessage());
 		}
 	}

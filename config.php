@@ -18,15 +18,15 @@ class Config{
 			'gravatar_size' => 80,
 				
 			/* Signature font settings */
-			'fontfile' => './opensans.ttf',
-				
+			'fontfile' => './assets/opensans.ttf',
+			
 			/* Image dimensions */
-			'img_width' => 400,
-			'img_heigth' => 100,
+			'img_width' => 200,
+			'img_heigth' => 85,
 				
 			/* Colors */
 			'col' => array(
-				'background' => $white
+				'background' => $white,
 			),
 				
 			/* Elements */
@@ -40,7 +40,13 @@ class Config{
 					'fontsize' => 10,
 					'offsetX' => 3,
 					'offsetY' => 8,
-				)
+				),
+				'stars' => array(
+					'img_file' => './assets/star.png',
+					'text_offsetX' => 15,
+					'img_offsetX' => 2,
+					'img_offsetY' => 2,
+				),
 			),
 		));
 	}
