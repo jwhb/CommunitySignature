@@ -61,8 +61,9 @@ class ImgGenerator {
 		//Add username as header to image
 		$usr = $cfg['elements']['username'];
 		$header_y = $usr['fontsize'] + $usr['offsetY'];
-		imagettftext($im, $usr['fontsize'], 0, $gsize + $usr['offsetX'], $usr['fontsize'] + $usr['offsetY'], $black, $ffile, $info['username']);
-		unset($usr, $avatar);
+		$box = imagettftext($im, $usr['fontsize'], 0, $gsize + $usr['offsetX'], $usr['fontsize'] + $usr['offsetY'], $black, $ffile, $info['username']);
+		$border = $box[2];
+		unset($box, $usr, $avatar);
 
 		//Add repos to image
 		
@@ -101,11 +102,17 @@ class ImgGenerator {
 		$stars_cfg = $this->config['elements']['stars'];
 		$star_im = imagecreatefrompng($stars_cfg['img_file']);
 		$start_x = $gsize + $max_repo_width + $starcfg['text_offsetX'] + $max_startxt_width + $stars_cfg['img_offsetX'];
+
 		foreach($info['repos'] as $num=>$repo){
 			imagecopy($im, $star_im, $start_x, $rowY[$num] + $stars_cfg['img_offsetY'], 0, 0, imagesx($star_im), imagesy($star_im));
 		}
 		
-		unset($repocfg, $rfsize, $rowY);
+		$end_x = $start_x + imagesx($star_im);
+		if($end_x > $border)
+			$border = $end_x;
+		//TODO: Crop image if needed
+		
+		unset($repocfg, $rfsize, $rowY, $stars_cfg, $star_im, $start_x);
 		
 		//Pass complete image
 		$this->showImage($im);

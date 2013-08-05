@@ -77,7 +77,7 @@ class GithubSignature {
 			
 			$this->img_gen->generateSignature(array(
 				'gravatar_url' => $gravatar_url,
-				'username' => $user['name'],
+				'username' => $user['login'],
 				'repos' => $this->getPopularUserRepos($repos),
 			));
 		}catch(Exception $e){

@@ -18,7 +18,7 @@ class Config{
 				'url' => 'http://www.gravatar.com/avatar/{id}?s={size}',
 				'size' => 80,
 				'offsetX' => 0,
-				'offsetY' => 3,
+				'offsetY' => 0,
 			),
 				
 			/* Signature font settings */
@@ -26,7 +26,7 @@ class Config{
 			
 			/* Image dimensions */
 			'img_width' => 285,
-			'img_heigth' => 86,
+			'img_heigth' => 80,
 				
 			/* Colors */
 			'col' => array(
@@ -47,9 +47,9 @@ class Config{
 				),
 				'stars' => array(
 					'img_file' => './assets/star.png',
-					'text_offsetX' => 15,
+					'text_offsetX' => 11,
 					'img_offsetX' => 3,
-					'img_offsetY' => -15,
+					'img_offsetY' => -12,
 				),
 				'error' => array(
 					'fontsize' => 10,
