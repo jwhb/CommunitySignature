@@ -14,15 +14,19 @@ class Config{
 		return(array(
 			
 			/* Gravatar settings */
-			'gravatar_url' => 'http://www.gravatar.com/avatar/{id}?s={size}',
-			'gravatar_size' => 80,
+			'gravatar' => array(
+				'url' => 'http://www.gravatar.com/avatar/{id}?s={size}',
+				'size' => 80,
+				'offsetX' => 0,
+				'offsetY' => 3,
+			),
 				
 			/* Signature font settings */
 			'fontfile' => './assets/opensans.ttf',
 			
 			/* Image dimensions */
-			'img_width' => 200,
-			'img_heigth' => 85,
+			'img_width' => 285,
+			'img_heigth' => 86,
 				
 			/* Colors */
 			'col' => array(
@@ -44,9 +48,12 @@ class Config{
 				'stars' => array(
 					'img_file' => './assets/star.png',
 					'text_offsetX' => 15,
-					'img_offsetX' => 2,
-					'img_offsetY' => 2,
+					'img_offsetX' => 3,
+					'img_offsetY' => -15,
 				),
+				'error' => array(
+					'fontsize' => 10,
+				)
 			),
 		));
 	}

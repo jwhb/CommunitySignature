@@ -10,7 +10,7 @@ class ImgGenerator {
 	
 	public function generateByText($text){
 		$ffile = $this->config['fontfile'];
-		$fsize = $this->config['fontsize'];
+		$fsize = $this->config['elements']['error']['fontsize'];
 		
 		$bounds = imagettfbbox($fsize, 0, $ffile, $text);
 		$width = $bounds[4] - $bounds[6];
@@ -30,7 +30,7 @@ class ImgGenerator {
 	public function generateSignature($info){
 		$cfg = $this->config;
 		$ffile = $cfg['fontfile'];
-		$gsize = $cfg['gravatar_size'];
+		$gsize = $cfg['gravatar']['size'];
 
 		$width = $cfg['img_width'];
 		$heigth = $cfg['img_heigth'];
@@ -54,7 +54,9 @@ class ImgGenerator {
 		unset($bkgcol);
 		
 		//Copy avatar image into destination image
-		imagecopy($im, $avatar, 0, 0, 0, 0, imagesx($avatar), imagesy($avatar));
+		$offsetX = + $cfg['gravatar']['offsetX'];
+		$offsetY = + $cfg['gravatar']['offsetY'];
+		imagecopy($im, $avatar, 0 + $offsetX, 0 + $offsetY, 0, 0, imagesx($avatar), imagesy($avatar));
 		
 		//Add username as header to image
 		$usr = $cfg['elements']['username'];
@@ -94,6 +96,15 @@ class ImgGenerator {
 			$box = imagettfbbox($rfsize, 0, $ffile, $stars);
 			if($box[4] > $max_startxt_width) $max_startxt_width = $box[4];
 		}
+		
+		//Add repo star images
+		$stars_cfg = $this->config['elements']['stars'];
+		$star_im = imagecreatefrompng($stars_cfg['img_file']);
+		$start_x = $gsize + $max_repo_width + $starcfg['text_offsetX'] + $max_startxt_width + $stars_cfg['img_offsetX'];
+		foreach($info['repos'] as $num=>$repo){
+			imagecopy($im, $star_im, $start_x, $rowY[$num] + $stars_cfg['img_offsetY'], 0, 0, imagesx($star_im), imagesy($star_im));
+		}
+		
 		unset($repocfg, $rfsize, $rowY);
 		
 		//Pass complete image
