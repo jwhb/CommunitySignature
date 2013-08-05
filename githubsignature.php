@@ -1,21 +1,18 @@
 <?php
 
-require_once 'vendor/autoload.php';
-require_once 'config.php';
-require_once 'ImgGenerator.php';
 
 class GithubSignature {
 	private $img_gen;
 	
 	public function __construct() {
-		$this->img_gen = new ImgGenerator ();
+		$this->img_gen = new ImgGenerator();
 	}
 	
-	private function getGravatarUri($gravatar_id, $gravatar_size){
+	private function getavatarUri($avatar_id, $avatar_size){
 		$url = str_replace(
 			array('{id}', '{size}'), 
-			array($gravatar_id, $gravatar_size),
-			Config::getImageConfig()['gravatar']['url']
+			array($avatar_id, $avatar_size),
+			Config::getImageConfig()['avatar']['url']
 		);
 		return($url);
 	}
@@ -49,19 +46,6 @@ class GithubSignature {
 		}
 		
 		return($top_repos);
-		
-		die();
-		return array(
-				array(
-						'name' => 'CraftButler', 'stars' => 1, 'lang' => 'Java'
-				),
-				array(
-						'name' => 'ElectEx', 'stars' => 2, 'lang' => 'PHP'
-				),
-				array(
-						'name' => 'ChattyKitten', 'stars' => 4, 'lang' => 'Java'
-				),
-		);
 	}
 	
 	public function showSignature($username) {
@@ -72,13 +56,13 @@ class GithubSignature {
 			
 			$user = $client->api('user')->show($username);
 			$repos = $client->api('user')->repositories($username);
-			$gravatar_url = $this->getGravatarUri($user['gravatar_id'],
-				Config::getImageConfig()['gravatar']['size']);
+			$avatar_url = $this->getavatarUri($user['gravatar_id'],
+				Config::getImageConfig()['avatar']['size']);
 			
 			$this->img_gen->generateSignature(array(
-				'gravatar_url' => $gravatar_url,
+				'avatar_url' => $avatar_url,
 				'username' => $user['login'],
-				'repos' => $this->getPopularUserRepos($repos),
+				'items' => $this->getPopularUserRepos($repos),
 			));
 		}catch(Exception $e){
 			if(isset($_GET['raw'])) print($e . "<br><br>\n\n");

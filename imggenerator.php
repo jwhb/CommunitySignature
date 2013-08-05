@@ -30,7 +30,7 @@ class ImgGenerator {
 	public function generateSignature($info){
 		$cfg = $this->config;
 		$ffile = $cfg['fontfile'];
-		$gsize = $cfg['gravatar']['size'];
+		$gsize = $cfg['avatar']['size'];
 
 		$width = $cfg['img_width'];
 		$heigth = $cfg['img_heigth'];
@@ -40,7 +40,7 @@ class ImgGenerator {
 		$back_col = $colors['background'];
 		
 		//Define avatar and destination signature images
-		$avatar = imagecreatefromjpeg($info['gravatar_url']);
+		$avatar = imagecreatefromjpeg($info['avatar_url']);
 		$im = @imagecreatetruecolor($width, $heigth) or die ('Could not create image');
 		
 		//Allocate colors
@@ -54,8 +54,8 @@ class ImgGenerator {
 		unset($bkgcol);
 		
 		//Copy avatar image into destination image
-		$offsetX = + $cfg['gravatar']['offsetX'];
-		$offsetY = + $cfg['gravatar']['offsetY'];
+		$offsetX = + $cfg['avatar']['offsetX'];
+		$offsetY = + $cfg['avatar']['offsetY'];
 		imagecopy($im, $avatar, 0 + $offsetX, 0 + $offsetY, 0, 0, imagesx($avatar), imagesy($avatar));
 		
 		//Add username as header to image
@@ -65,45 +65,45 @@ class ImgGenerator {
 		$border = $box[2];
 		unset($box, $usr, $avatar);
 
-		//Add repos to image
+		//Add items to image
 		
-		$repocfg = $cfg['elements']['repos'];
+		$itemcfg = $cfg['elements']['items'];
 		$starcfg = $cfg['elements']['stars'];
-		$rfsize = $repocfg['fontsize'];
-		$rowY[0] = $header_y + $rfsize + $repocfg['offsetY'];
-		$max_repo_width = 0;
+		$rfsize = $itemcfg['fontsize'];
+		$rowY[0] = $header_y + $rfsize + $itemcfg['offsetY'];
+		$max_item_width = 0;
 		$max_startxt_width = 0;
 		
-		//Add repo names
-		foreach($info['repos'] as $num=>$repo){
+		//Add item names
+		foreach($info['items'] as $num=>$item){
 			//Write row positions
-			if($num > 0) $rowY[$num] = $rowY[$num - 1] + $rfsize + $repocfg['offsetY'];
-			$reponame = $info['repos'][$num]['name'];
+			if($num > 0) $rowY[$num] = $rowY[$num - 1] + $rfsize + $itemcfg['offsetY'];
+			$itemname = $info['items'][$num]['name'];
 			
-			imagettftext($im, $rfsize, 0, $gsize + $repocfg['offsetX'], $rowY[$num], $black, $ffile, $reponame);
+			imagettftext($im, $rfsize, 0, $gsize + $itemcfg['offsetX'], $rowY[$num], $black, $ffile, $itemname);
 			
 			//Determine max width for table style indention
-			$box = imagettfbbox($rfsize, 0, $ffile, $reponame);
-			if($box[4] > $max_repo_width) $max_repo_width = $box[4];
+			$box = imagettfbbox($rfsize, 0, $ffile, $itemname);
+			if($box[4] > $max_item_width) $max_item_width = $box[4];
 		}
 		
-		//Add repo star counts
-		foreach($info['repos'] as $num=>$repo){
-			//Add repo star count
-			$stars = $info['repos'][$num]['stars'];
-			imagettftext($im, $rfsize, 0, $gsize + $max_repo_width + $starcfg['text_offsetX'], $rowY[$num], $black, $ffile, $stars);
+		//Add item star counts
+		foreach($info['items'] as $num=>$item){
+			//Add item star count
+			$stars = $info['items'][$num]['stars'];
+			imagettftext($im, $rfsize, 0, $gsize + $max_item_width + $starcfg['text_offsetX'], $rowY[$num], $black, $ffile, $stars);
 			
 			//Determine max width for table style indention
 			$box = imagettfbbox($rfsize, 0, $ffile, $stars);
 			if($box[4] > $max_startxt_width) $max_startxt_width = $box[4];
 		}
 		
-		//Add repo star images
+		//Add item star images
 		$stars_cfg = $this->config['elements']['stars'];
 		$star_im = imagecreatefrompng($stars_cfg['img_file']);
-		$start_x = $gsize + $max_repo_width + $starcfg['text_offsetX'] + $max_startxt_width + $stars_cfg['img_offsetX'];
+		$start_x = $gsize + $max_item_width + $starcfg['text_offsetX'] + $max_startxt_width + $stars_cfg['img_offsetX'];
 
-		foreach($info['repos'] as $num=>$repo){
+		foreach($info['items'] as $num=>$item){
 			imagecopy($im, $star_im, $start_x, $rowY[$num] + $stars_cfg['img_offsetY'], 0, 0, imagesx($star_im), imagesy($star_im));
 		}
 		
@@ -112,7 +112,7 @@ class ImgGenerator {
 			$border = $end_x;
 		//TODO: Crop image if needed
 		
-		unset($repocfg, $rfsize, $rowY, $stars_cfg, $star_im, $start_x);
+		unset($itemcfg, $rfsize, $rowY, $stars_cfg, $star_im, $start_x);
 		
 		//Pass complete image
 		$this->showImage($im);

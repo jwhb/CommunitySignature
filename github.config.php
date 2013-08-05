@@ -2,9 +2,7 @@
 
 class Config{
 	
-	public static function getGithubConfig(){
-		return(array());
-	}
+	public static $enabled = true;
 	
 	public static function getImageConfig(){
 
@@ -13,8 +11,8 @@ class Config{
 		
 		return(array(
 			
-			/* Gravatar settings */
-			'gravatar' => array(
+			/* avatar settings */
+			'avatar' => array(
 				'url' => 'http://www.gravatar.com/avatar/{id}?s={size}',
 				'size' => 80,
 				'offsetX' => 0,
@@ -40,7 +38,7 @@ class Config{
 					'offsetX' => 3,
 					'offsetY' => 5,
 				),
-				'repos' => array(
+				'items' => array(
 					'fontsize' => 10,
 					'offsetX' => 3,
 					'offsetY' => 8,
