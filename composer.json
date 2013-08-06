@@ -1,6 +1,15 @@
 {
+    "name": "jwhy/communitysignature",
+    "description": "Generates a PNG image including a social network user's avatar and most popular items (e.g songs)",
     "require": {
         "knplabs/github-api": "*"
     },
+    "license": "Apache v2 License",
+    "authors": [
+        {
+            "name": "JWhy",
+            "email": "jwhy@jwhy.de"
+        }
+    ],
     "minimum-stability": "dev"
 }
