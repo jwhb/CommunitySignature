@@ -1,23 +1,22 @@
 <?php
 
 
-class GithubSignature {
-	private $img_gen;
-	
+class GitHubSignature extends SignatureGenerator{
+
 	public function __construct() {
-		$this->img_gen = new ImgGenerator();
+		parent::__construct();
 	}
-	
-	private function getavatarUri($avatar_id, $avatar_size){
+
+	public function getAvatarUri($avatar_id, $avatar_size){
 		$url = str_replace(
-			array('{id}', '{size}'), 
-			array($avatar_id, $avatar_size),
-			Config::getImageConfig()['avatar']['url']
+				array('{id}', '{size}'),
+				array($avatar_id, $avatar_size),
+				Config::getImageConfig()['avatar']['url']
 		);
 		return($url);
-	}
+	}	
 	
-	public function getPopularUserRepos($userrepos, $limit = 3, $quick_info = true){
+	public function getPopularItems($items, $limit = 3, $quick_info = true){
 		
 		function compareRepos($a, $b){
 		    if ($a == $b)
@@ -25,19 +24,19 @@ class GithubSignature {
 		    return ($a['watchers'] < $b['watchers']);
 		}
 		
-		usort($userrepos, 'compareRepos');
+		usort($items, 'compareRepos');
 		
-		$top_repos = array();
+		$top_items = array();
 		for($i = 0; $i < $limit; $i++){
 			
 			if(!$quick_info){
 				//don't put the information in form, just return the whole object
-				$top_repos[] = $userrepos[$i];
+				$top_items[] = $items[$i];
 			} else {
 				//filter the information, "quick info mode"
-				$rp = $userrepos[$i];
+				$rp = $items[$i];
 				
-				$top_repos[] = array(
+				$top_items[] = array(
 					'name' => $rp['name'],
 					'stars' => $rp['watchers'],
 					'lang' => $rp['language'],
@@ -45,7 +44,7 @@ class GithubSignature {
 			}
 		}
 		
-		return($top_repos);
+		return($top_items);
 	}
 	
 	public function showSignature($username) {
@@ -55,14 +54,14 @@ class GithubSignature {
 			)));
 			
 			$user = $client->api('user')->show($username);
-			$repos = $client->api('user')->repositories($username);
-			$avatar_url = $this->getavatarUri($user['gravatar_id'],
+			$items = $client->api('user')->repositories($username);
+			$avatar_url = $this->getAvatarUri($user['gravatar_id'],
 				Config::getImageConfig()['avatar']['size']);
 			
 			$this->img_gen->generateSignature(array(
 				'avatar_url' => $avatar_url,
 				'username' => $user['login'],
-				'items' => $this->getPopularUserRepos($repos),
+				'items' => $this->getPopularItems($items),
 			));
 		}catch(Exception $e){
 			if(isset($_GET['raw'])) print($e . "<br><br>\n\n");
